@@ -136,3 +136,9 @@ Three civic building projects now appear when the right visitor friendships are 
 ### Rebuild and verify a clone (Version 6)
 
 From the repository root, run `python source/scripts/build_release.py --check` to verify that the two published standalone HTML pages match their split HTML/CSS/JavaScript sources exactly. Run without `--check` to regenerate them. For gameplay regression checks, install Playwright plus Chromium, then run `python source/tests/commons_regression.py`. The local suite completed successfully on October 19, 2026.
+
+## Version 7 · Festivals of the Sky (October 19, 2026)
+
+The Free Lantern Way, Rain Listening House and Tomorrow Commons now host three resident-led festivals: The Lantern Parade, The Chorus of Rain and The Tomorrow Fair. Two landmark prerequisites unlock each event; every permanent choice illuminates an island-to-island route. All three reveal a shared-history finale. See [FESTIVALS.md](FESTIVALS.md).
+
+SKY7 adds one base-three field for festival decisions; SKY1–SKY6 imports remain supported. No private journal text is transmitted.
