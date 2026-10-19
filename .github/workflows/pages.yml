@@ -52,15 +52,16 @@ jobs:
               html=path.read_text(encoding="utf-8")
               parser=Inspector();parser.feed(html);parser.close()
               assert len(set(parser.ids))==len(parser.ids), f"Duplicate IDs in {path}"
-              for required in ["sky-canvas","visitor-grid","community-grid","community-count","commons-grid","commons-count","sky-code","import-dialog","loom-gallery"]:
+              for required in ["sky-canvas","visitor-grid","community-grid","community-count","commons-grid","commons-count","festival-grid","festival-count","sky-code","import-dialog","loom-gallery"]:
                   assert required in parser.ids, f"Missing {required} in {path}"
-              assert "The Sky Commons" in html and "SKY6" in html, f"Unexpected game version in {path}"
+              assert "Festivals of the Sky" in html and "SKY7" in html, f"Unexpected game version in {path}"
               for script in re.findall(r"<script>(.*?)</script>",html,re.S|re.I):
                   with tempfile.NamedTemporaryFile("w",suffix=".js",encoding="utf-8") as tmp:
                       tmp.write(script);tmp.flush()
                       subprocess.run(["node","--check",tmp.name],check=True)
           assert "commonsDigits" in Path("source/app.js").read_text()
-          print("Version 6 source validation passed.")
+          assert "festivalDigits" in Path("source/app.js").read_text()
+          print("Version 7 source validation passed.")
           PY
       - name: Package only public world pages
         shell: bash

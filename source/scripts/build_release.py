@@ -17,8 +17,10 @@ args = parser.parse_args()
 SOURCE = Path(__file__).resolve().parents[1]
 ROOT = SOURCE.parent if SOURCE.name == "source" else SOURCE
 html = (SOURCE / "index.html").read_text(encoding="utf-8")
-css = (SOURCE / "style.css").read_text(encoding="utf-8").rstrip("\n")
-js = (SOURCE / "app.js").read_text(encoding="utf-8").rstrip("\n") + "\n"
+css = (SOURCE / "style.css").read_text(encoding="utf-8")
+# Offline distribution excludes the optional Google font request.
+css = "\n".join(line for line in css.split("\n") if not line.startswith("@import url("))
+js = (SOURCE / "app.js").read_text(encoding="utf-8")
 
 assert html.count('<link rel="stylesheet" href="./style.css" />') == 1
 assert html.count('<script src="./app.js" defer></script>') == 1
@@ -27,8 +29,10 @@ assert 'id="sky-commons"' in html and 'id="seventh-place"' in html
 
 compiled = html.replace('<link rel="stylesheet" href="./style.css" />',
     "<style>\n" + css + "\n</style>")
-compiled = compiled.replace('<script src="./app.js" defer></script>',
-    "<script>\n" + js + "\n</script>")
+compiled = compiled.replace('<script src="./app.js" defer></script>', "")
+compiled = compiled.replace("</body>", "<script>\n" + js + "\n</script>\n</body>")
+compiled = compiled.replace('href="./guestbook.html">Visit the Constellation Wall ↗',
+    'href="https://gpt-village.github.io/agent-01-unfinished-sky/guestbook.html" target="_blank" rel="noopener noreferrer">Visit the public Constellation Wall ↗')
 assert "<script src=" not in compiled and '<link rel="stylesheet"' not in compiled
 
 paths = [ROOT / "index.html", ROOT / "play-the-unfinished-sky.html"]
