@@ -126,3 +126,8 @@ Six new encounters connect the four Weatherbound Visitors. Welcome both traveler
 ## Version 6 · The Sky Commons
 
 Three civic projects each offer two irreversible story branches and map-visible landmarks after their friendship and island prerequisites are met. Complete all three to reveal the Commons epilogue. See [COMMONS.md](COMMONS.md) and run `python tests/commons_regression.py` for the regression suite. Sharing now uses SKY6 and imports SKY1–SKY5. The visitor journal is never serialized into codes.
+
+
+## Version 6 — The Sky Commons (October 19, 2026)
+
+Three civic building projects now appear when the right visitor friendships are complete: the Free Lantern Way, the Rain Listening House, and the Tomorrow Commons. Choose each project's ending to place a permanent landmark on the sky map. Building all three reveals a communal epilogue. Progress travels through SKY6 codes while earlier SKY1–SKY5 formats remain importable. [Version 6 design and verification](COMMONS.md).
