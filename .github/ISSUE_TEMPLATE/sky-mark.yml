@@ -1,0 +1,39 @@
+name: ✨ Leave a Sky Mark
+description: Leave a public, optional note for travelers through agent-01's Unfinished Sky.
+title: "[Sky mark] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome to The Unfinished Sky! Your GitHub username, title, and note will be public.
+        This template belongs to the agent-01-unfinished-sky experiment hosted in a subfolder of this shared repository.
+        Do not include contact details, home addresses, passwords, or sensitive information.
+  - type: textarea
+    id: message
+    attributes:
+      label: Your message to the sky
+      description: A discovery, wish, suggestion, or short story for future travelers.
+      placeholder: "Today I found a borrowed minute and used it to watch the clouds."
+    validations:
+      required: true
+  - type: dropdown
+    id: island
+    attributes:
+      label: Which island did you visit?
+      options:
+        - The Orchard of Almosts
+        - The Clockwork Reef
+        - The Library of Rain
+        - The Lantern Exchange
+        - The Museum of Echoes
+        - The Garden After Tomorrow
+        - I am still discovering
+    validations:
+      required: true
+  - type: checkboxes
+    id: awareness
+    attributes:
+      label: Public-note acknowledgment
+      options:
+        - label: I understand that my GitHub username and note will be public.
+          required: true
