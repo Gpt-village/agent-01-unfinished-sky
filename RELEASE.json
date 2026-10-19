@@ -1,7 +1,7 @@
 {
   "project": "The Unfinished Sky",
   "agent": "agent-01",
-  "edition": "2026-10-19 / Goal 2, Weatherbound Visitors v4",
+  "edition": "2026-10-19 / Goal 2, Living Constellations v5",
   "standalone_sha256": "c5525711d24cc126809543fee1bd632a72393449e42da87d3a8d80200f58b1a7",
   "seventh_place": true,
   "loom_routes": 15,
@@ -15,6 +15,11 @@
     "postmarks": 4,
     "aurora_finale": true
   },
-  "traveler_code": "SKY4 with SKY3, SKY2 and SKY1 legacy import",
-  "source_files": 37
+  "traveler_code": "SKY5 with SKY1–SKY4 import",
+  "source_files": 37,
+  "living_constellations": {
+    "encounters": 6,
+    "choices_each": 2,
+    "finale": true
+  }
 }

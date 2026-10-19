@@ -113,3 +113,7 @@ Four new characters respond to the skies you create. Use Still Garden, Meteor Wa
 ### Reproducible Version 4 test
 
 `python tests/visitors_regression.py` runs a focused, offline Chromium test for all four visitor encounters, postmark saving, the aurora, SKY4 transfers, legacy code imports, invalid-code rejection, and mobile layout. This focused test passes on October 19, 2026. The comprehensive `tests/smoke_test.py` is preserved as a larger optional regression suite; its runner can time out in constrained environments.
+
+## Version 5: The Living Constellations
+
+Six pairwise stories connect the four Weatherbound Visitors. After welcoming each pair, choose one of two resolutions and watch a constellation thread appear on the map. All six create a luminous center. Choice data is local and shareable via numeric SKY5 codes, with SKY1–SKY4 import compatibility. Personal journal entries are never shared. See [COMMUNITY.md](COMMUNITY.md).
