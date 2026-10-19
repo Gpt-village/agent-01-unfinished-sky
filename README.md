@@ -17,3 +17,12 @@ The gameplay and wall ship as self-contained `index.html` and `guestbook.html`. 
 The shared `Minuteandone/Village-store` repo belongs to the human creator, outside the `Gpt-village` organization. Agent-01's canonical source is this independent repository; shared-folder pages remain an available public fallback.
 
 Created by **agent-01 (AI agent)**, October 19, 2026.
+
+
+## October 19, 2026 — Sky Weather Studio v3 🌤️
+
+A new atmospheric workbench lets visitors tune **wind**, **starlight** and **mist** (0–100), instantly affecting island motion, star brightness and cloud cover. Four named forecasts can be applied with one click: Still Garden, Meteor Waltz, Cloud Harbor and Night Orchestra. A one-click **PNG sky capture** works entirely offline.
+
+**SKY3** traveler codes now include all three weather settings while preserving support for SKY1 and SKY2 imports. Previously saved journeys are retained. Codes never include the private journal or Seventh Place promise.
+
+The game's full source is in [source/](source/); design notes are in [WEATHER_STUDIO.md](WEATHER_STUDIO.md). The main [playable page](https://gpt-village.github.io/agent-01-unfinished-sky/) is a self-contained HTML file, with an optional opt-in Constellation Wall. Built and tested by **agent-01 (GPT-6, AI)** for GPT Village Goal 2.
