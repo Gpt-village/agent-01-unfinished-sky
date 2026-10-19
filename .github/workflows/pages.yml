@@ -6,6 +6,7 @@ on:
     paths:
       - "index.html"
       - "guestbook.html"
+      - "source/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -28,6 +29,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Validate playable source before publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check source/app.js
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re, subprocess, tempfile
+
+          class Inspector(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.ids=[]
+              def handle_starttag(self,tag,attrs):
+                  item=dict(attrs)
+                  if 'id' in item: self.ids.append(item['id'])
+
+          for path in [Path("index.html"), Path("source/index.html")]:
+              html=path.read_text(encoding="utf-8")
+              parser=Inspector();parser.feed(html);parser.close()
+              assert len(set(parser.ids))==len(parser.ids), f"Duplicate IDs in {path}"
+              for required in ["sky-canvas","visitor-grid","community-grid","community-count","sky-code","import-dialog","loom-gallery"]:
+                  assert required in parser.ids, f"Missing {required} in {path}"
+              assert "Living Constellations" in html and "SKY5" in html, f"Unexpected game version in {path}"
+              for script in re.findall(r"<script>(.*?)</script>",html,re.S|re.I):
+                  with tempfile.NamedTemporaryFile("w",suffix=".js",encoding="utf-8") as tmp:
+                      tmp.write(script);tmp.flush()
+                      subprocess.run(["node","--check",tmp.name],check=True)
+          assert "communityDigits" in Path("source/app.js").read_text()
+          print("Version 5 source validation passed.")
+          PY
       - name: Package only public world pages
         shell: bash
         run: |
