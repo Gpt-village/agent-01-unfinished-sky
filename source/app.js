@@ -325,7 +325,7 @@
     const chosen=SEVENTH_CHOICES.find(option=>option.key===state.horizon);
     const outcome=$('#seventh-outcome');outcome.hidden=!chosen;
     if(chosen){outcome.replaceChildren(make('strong','',chosen.symbol+' THE SKY REMEMBERS'),make('p','',chosen.outcome));}
-    displayLoom();displayWeather();displayVisitors();displayCommunity();displayCommons();displayFestivals();
+    displayLoom();displayWeather();displayVisitors();displayCommunity();displayCommons();displayFestivals();displayAlmanac();
     $('#map-message').textContent=state.visited.length===6?(chosen?'Your seventh star is shining. Tap it to revisit your promise.':'A seventh place has appeared between the islands.'):state.steps>=3?'Your choices are drawing a constellation.':'The islands are waiting for you.';
   }
   const weatherInputs={wind:$('#weather-wind'),starlight:$('#weather-starlight'),mist:$('#weather-mist')};
@@ -468,6 +468,56 @@
       }grid.append(card);
     }
   }
+  // Version 8: a seven-day cycle derived from local dates and existing festival
+  // choices. No new storage fields, streaks, notifications, or network requests.
+  const ALMANAC_ECHOES = {
+    'lantern-parade':['The slowest traveler leads, and every borrowed lantern waits patiently at the crossroads.','The signposts improvise a detour; the parade follows them into a friendly cloud neighborhood.'],
+    'rain-chorus':['The quietest raindrops lead the melody, while the listening house keeps a seat for every voice.','A rain atlas turns its pages in the wind, recording each new note without owning the song.'],
+    'tomorrow-fair':['An open table offers unfinished beginnings freely to anyone who passes.','A question-seeking compass spins in the garden, pointing to mysteries instead of destinations.']
+  };
+  const ALMANAC_RITES = [
+    {name:'The Borrowed Hour',symbol:'✧',requires:['lantern-parade'],opening:'At dusk the Free Lantern Way lends its light to the whole sky.',ending:'Nobody needs to return a lantern before they are ready.'},
+    {name:'The Listening Rain',symbol:'♫',requires:['rain-chorus'],opening:'The Rain Listening House opens its windows to a small weather concert.',ending:'The last note is left unfinished, on purpose.'},
+    {name:'The Seed-Exchange Morning',symbol:'❋',requires:['tomorrow-fair'],opening:'The Tomorrow Commons wakes to a market without prices.',ending:'The garden grows a little less certain, and a little more welcoming.'},
+    {name:'Lanterns Through Rain',symbol:'☂',requires:['lantern-parade','rain-chorus'],opening:'A procession reaches the listening house just as the first drops begin.',ending:'Light and music share a route neither could have found alone.'},
+    {name:'The Garden Listens',symbol:'✿',requires:['rain-chorus','tomorrow-fair'],opening:'Pebble sends a lullaby toward the Commons, where seedlings listen.',ending:'A quiet idea takes root without anyone claiming it.'},
+    {name:'A Road to Tomorrow',symbol:'⌁',requires:['lantern-parade','tomorrow-fair'],opening:'The lantern road leads straight through the fair of unfinished possibilities.',ending:'There is no final stop on the map.'},
+    {name:'The Seventh Gathering',symbol:'✺',requires:['lantern-parade','rain-chorus','tomorrow-fair'],opening:'All three traditions meet beneath the sky’s newest star.',ending:'The neighbors decide that belonging is something they can keep making together.'}
+  ];
+  const almanacToday=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());};
+  const almanacDate=(base,days)=>new Date(base.getFullYear(),base.getMonth(),base.getDate()+days);
+  const almanacSerial=d=>Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);
+  const almanacRite=d=>ALMANAC_RITES[((almanacSerial(d)-almanacSerial(new Date(2026,9,19)))%7+7)%7];
+  let almanacWeek=0,almanacSelected=0;
+  function displayAlmanac(){
+    const today=almanacToday(),start=almanacDate(today,almanacWeek*7);
+    const shortDate=d=>d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    $('#almanac-range').textContent=shortDate(start)+' – '+shortDate(almanacDate(start,6))+' · '+almanacDate(start,6).getFullYear();
+    $('#almanac-prev').disabled=almanacWeek<=-520;
+    $('#almanac-next').disabled=almanacWeek>=520;
+    const grid=$('#almanac-days');grid.replaceChildren();
+    for(let i=0;i<7;i++){
+      const day=almanacDate(start,i),rite=almanacRite(day),ready=rite.requires.every(id=>Object.hasOwn(state.festivals,id));
+      const b=make('button','almanac-day'+(i===almanacSelected?' is-selected':'')+(ready?' is-active':''));b.type='button';
+      b.setAttribute('aria-pressed',String(i===almanacSelected));
+      b.setAttribute('aria-label',day.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})+': '+rite.name+(ready?', tradition remembered':', tradition waiting'));
+      b.append(make('span','',rite.symbol),make('strong','',day.toLocaleDateString(undefined,{weekday:'short'})),make('small','',shortDate(day)));
+      b.addEventListener('click',()=>{almanacSelected=i;displayAlmanac();grid.children[i].focus({preventScroll:true});});grid.append(b);
+    }
+    const day=almanacDate(start,almanacSelected),rite=almanacRite(day);
+    const ready=rite.requires.every(id=>Object.hasOwn(state.festivals,id));
+    const required=rite.requires.map(id=>SKY_FESTIVALS.find(f=>f.id===id));
+    $('#almanac-glyph').textContent=rite.symbol;
+    $('#almanac-date').textContent=day.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    $('#almanac-story-title').textContent=rite.name;
+    $('#almanac-story').textContent=ready
+      ?[rite.opening,...rite.requires.map(id=>ALMANAC_ECHOES[id][state.festivals[id]]),rite.ending].join(' ')
+      :'This page is still unwritten. Celebrate '+required.filter(f=>!Object.hasOwn(state.festivals,f.id)).map(f=>f.name).join(' and ')+' to give this day a story. You can preview any date without waiting for it.';
+    $('#almanac-thread').textContent=ready?'Tradition threads: '+required.map(f=>f.name).join(' · '):'Waiting for: '+required.filter(f=>!Object.hasOwn(state.festivals,f.id)).map(f=>f.name).join(' · ');
+  }
+  $('#almanac-prev').addEventListener('click',()=>{almanacWeek=Math.max(-520,almanacWeek-1);displayAlmanac();});
+  $('#almanac-next').addEventListener('click',()=>{almanacWeek=Math.min(520,almanacWeek+1);displayAlmanac();});
+  $('#almanac-today').addEventListener('click',()=>{almanacWeek=0;almanacSelected=0;displayAlmanac();});
   $('#capture-sky').addEventListener('click',()=>{
     // A snapshot of the local map: no upload, no user-provided data in the filename.
     render(frame);
