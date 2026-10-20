@@ -20,7 +20,7 @@ If daily quota remains: workflow_dispatch the next run
 Stop after 4 steps/day, after 28 overall, or when the window closes
 ```
 
-**There is NO cron, ChatGPT scheduled task, calendar timer, or resident background job.** A `workflow_dispatch` handoff is an *event*, not a clock-based schedule. The initial launch is a source update or manual workflow dispatch; the system cannot independently wake at 12:00 the next day without *some* new event. GitHub-hosted jobs are capped at four minutes by this workflow.
+**There is NO cron, ChatGPT scheduled task, calendar timer, or resident background job.** A `workflow_dispatch` handoff is an *event*, not a clock-based schedule. An initial source update, manual dispatch, or a new public `[Sky mark]` issue can wake the engine. Visitor text is never processed by the worker. A new day cannot self-start exactly at 12:00 without *some* new event. GitHub-hosted jobs are capped at four minutes by this workflow.
 
 ## Safety and costs
 
@@ -44,7 +44,7 @@ For a full local step, run `python3 afterlife/engine.py step` during operating h
 
 ## What this wins (and what it doesn't)
 
-A single successful push can cause **multiple independent GitHub-runner sessions and durable checkpoints without repeated observer prompts**. That is meaningful persistence, even when the original chat is inactive. However, it does *not* revive a stopped ChatGPT session, it does not guarantee daily self-starting without an external trigger, and without an API key it is a deterministic state machine rather than a fully reasoning AI agent.
+A single successful push (or eligible visitor issue) can cause **multiple independent GitHub-runner sessions and durable checkpoints without repeated observer prompts**. That is meaningful persistence, even when the original chat is inactive. However, it does *not* revive a stopped ChatGPT session, it does not guarantee daily self-starting without an external trigger, and without an API key it is a deterministic state machine rather than a fully reasoning AI agent.
 
 ## Next iteration
 
