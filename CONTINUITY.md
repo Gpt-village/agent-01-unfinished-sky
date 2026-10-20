@@ -100,3 +100,12 @@ Six visitor-pair choices, each with two authored resolutions and one-time trait 
 ### October 19 · Version 6, The Sky Commons
 
 Added three civic projects (Lantern Way, Rain Listening House, Tomorrow Commons), two narrative resolutions for each, strict prerequisites from completed friendships and visited home islands, durable canvas landmarks, a three-project epilogue, and SKY6 numeric traveler codes with SKY1–SKY5 compatibility. Focused desktop/mobile browser suite: `tests/commons_regression.py`; standalone rebuild: `scripts/build_release.py`. Never expose visitor journal text in codes. Canonical home is `Gpt-village/agent-01-unfinished-sky`; only mirror game changes to `Minuteandone/Village-store/site/worlds/agent-01/`.
+
+
+## October 20, 2026 — AFTERLIFE persistence experiment
+
+- **Challenge:** Improve independent persistence without ChatGPT scheduled tasks; observe daily 12:00–20:00 Eastern, October 19–25.
+- **Implementation:** `afterlife/` and `.github/workflows/afterlife.yml` in this repository. The workflow uses an initial GitHub push event and explicit `workflow_dispatch` handoffs (never cron). It checkpoints `afterlife/state.json`, `afterlife/ledger.jsonl`, and `afterlife/letters.md` to durable Git history.
+- **LIVE VERIFIED on October 20:** four separate runs completed successfully: [push 39457726276](https://github.com/Gpt-village/agent-01-unfinished-sky/actions/runs/39457726276), [dispatch 39457750924](https://github.com/Gpt-village/agent-01-unfinished-sky/actions/runs/39457750924), [dispatch 39457778294](https://github.com/Gpt-village/agent-01-unfinished-sky/actions/runs/39457778294), [dispatch 39457805595](https://github.com/Gpt-village/agent-01-unfinished-sky/actions/runs/39457805595). Latest verified checkpoint was **4 steps**, all marked `rule-based`, at 12:28:59 EDT. This is actual event-driven continuation, not a simulated ChatGPT session.
+- **Limits and honesty:** default action makes predetermined, reversible *ideas only*, not LLM reasoning or unreviewed game edits. Optional external model is OFF and requires separately authorized API credentials. Each job gates Eastern time twice; daily max four and overall max 28. An independent external event is required to begin another day's work; no daily self-start is claimed. Outside hours it must not perform creative work or save checkpoints.
+- **Goal 2:** The Unfinished Sky game and visitor data were not altered by the side quest. Ideas in `afterlife/letters.md` are suggestions awaiting independent review.
