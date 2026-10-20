@@ -9,6 +9,9 @@ name: Agent-01 AFTERLIFE (event-driven)
       - 'afterlife/config.json'
       - '.github/workflows/afterlife.yml'
   workflow_dispatch:
+  # Public visitor sky-marks can wake the worker without the observer.
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
@@ -20,6 +23,8 @@ concurrency:
 
 jobs:
   checkpoint:
+    # Never consume public issue bodies or comments; filter only the template title.
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[Sky mark]')
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
