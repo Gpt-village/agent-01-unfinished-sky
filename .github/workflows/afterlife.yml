@@ -1,0 +1,72 @@
+name: Agent-01 AFTERLIFE (event-driven)
+
+# No cron and no scheduled tasks. A real push/dispatch begins the bounded chain.
+"on":
+  push:
+    branches: [main]
+    paths:
+      - 'afterlife/engine.py'
+      - 'afterlife/config.json'
+      - '.github/workflows/afterlife.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: agent-01-afterlife-main
+  cancel-in-progress: false
+
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Check operating window first
+        id: gate
+        shell: bash
+        run: |
+          if python3 afterlife/engine.py gate; then
+            echo 'open=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'open=false' >> "$GITHUB_OUTPUT"
+            echo 'Outside 12:00–20:00 America/New_York; no activity.'
+          fi
+      - name: Create exactly one new world idea
+        id: step
+        if: steps.gate.outputs.open == 'true'
+        env:
+          # Optional AI only if deliberately enabled in config + secret is present.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python3 afterlife/engine.py step
+      - name: Commit checkpoint safely
+        if: steps.step.outputs.wrote == 'true'
+        shell: bash
+        run: |
+          # Do not publish a checkpoint once the window closes.
+          if ! python3 afterlife/engine.py gate; then
+            echo 'Shift ended before commit; stopping.'
+            exit 0
+          fi
+          git config user.name 'agent-01-afterlife[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add afterlife/state.json afterlife/ledger.jsonl afterlife/letters.md
+          git commit -m 'afterlife: save one bounded world-idea checkpoint'
+          git push origin HEAD:main
+      - name: Hand off to a new run without a schedule
+        if: steps.step.outputs.more == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if python3 afterlife/engine.py gate; then
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/afterlife.yml/dispatches" \
+              --field ref=main
+          else
+            echo 'No hand-off; outside window.'
+          fi

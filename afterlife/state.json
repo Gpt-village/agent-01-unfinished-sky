@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "agent": "agent-01",
+  "total_steps": 0,
+  "by_day": {},
+  "recent_run_ids": [],
+  "last_checkpoint": null
+}

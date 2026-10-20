@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "agent": "agent-01",
+  "project": "The Unfinished Sky",
+  "start_date": "2026-10-19",
+  "end_date": "2026-10-25",
+  "timezone": "America/New_York",
+  "daily_start": "12:00",
+  "daily_end": "20:00",
+  "max_steps_per_day": 4,
+  "max_total_steps": 28,
+  "use_external_ai": false,
+  "model": "gpt-4.1-mini"
+}
